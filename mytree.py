@@ -11,20 +11,26 @@ from kivy.core.window import Window
 
 
 class MyNode(BoxLayout, TreeViewNode):
-    def __init__(self, image, text, parent=None, **kwargs):
+    def __init__(self, image, text, **kwargs):
         BoxLayout.__init__(self, **kwargs)
         self.width = 800
-        self.parent_node = parent
         self.add_widget(image)
         label = Label(text=text, size_hint_x=0.9, text_size=(400, None), halign='left')
         label.width = 700
 
         self.category_name = label
         self.add_widget(self.category_name)
-        #self.bind(on_motion=self.cb)
 
     def create_components(self):
         pass
+
+    def on_touch_down(self, t):
+        print('touch', self.category_name.text)
+        # print(type(super(MyNode, self).on_touch_down(t)))
+        # print(t.__dict__)
+
+    def on_touch_up(self, t):
+        print('release', self.category_name.text)
 
     def cb(self, e):
         print(e)
@@ -44,19 +50,25 @@ class MainWindow(BoxLayout):
 
         img = Image(source='C:\\Users\\PredatorPy\\Pictures\\Wallpaper\\7CQ5vyX.jpg', size_hint_x=0.1)
 
-        node3 = MyNode(img, 'CSGO', parent=node1, orientation="horizontal")
+        node3 = MyNode(img, 'CSGO',  orientation="horizontal")
         node3.height = 45
         node3.fbind('on event', self.state)
+        node4 = MyNode(Image(), 'COD', orientation="horizontal")
+
         self.tree.add_node(node1)
         self.tree.add_node(node2)
         self.tree.add_node(node3, parent=node1)
-        Window.bind(on_motion=self.cb)
+        self.tree.add_node(node4, parent=node1)
 
     def cb(self, e, e2, e3):
         print('cb', e, e2, e3)
 
     def state(self, e):
         print(e)
+
+    def on_touch_up(self, t):
+        pass
+        #print('release window')
 
 
 class MainApp(App):
